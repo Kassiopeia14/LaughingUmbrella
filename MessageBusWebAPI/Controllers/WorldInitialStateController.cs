@@ -28,7 +28,7 @@ namespace MessageBusWebAPI.Controllers
         {
             worldLog.setWorldInitialState(worldInitialState);
 
-            return "ok";
+            return "worldInitialState set is ok";
         }
     }
 }

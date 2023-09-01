@@ -41,5 +41,14 @@
     <ClInclude Include="JSONConvert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AgentState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Epoch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

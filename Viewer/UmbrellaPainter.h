@@ -25,11 +25,16 @@ private:
 	HBRUSH 
 		worldLightBrush,
 		pitBrush,
-		appleBrush;
+		appleBrush,
+		agentBrush;
+
+	void drawCell(HDC dc, int x, int y, HBRUSH brush);
 
 	void drawField(HDC dc);
 
 	void drawWorldInitialState(HDC dc);
+
+	void drawCurrentState(HDC dc);
 
 public:
 

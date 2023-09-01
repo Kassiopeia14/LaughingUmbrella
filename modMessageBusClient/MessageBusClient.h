@@ -7,6 +7,7 @@
 
 #include "JSONConvert.h"
 #include "WorldInitialState.h"
+#include "Epoch.h"
 
 class MessageBusClient
 {
@@ -18,6 +19,10 @@ public:
 	std::string sendWorldInitialState(WorldInitialState worldInitialState);
 	
 	WorldInitialState getWorldInitialState();
+
+	std::string sendEpoch(Epoch epoch);
+
+	Epoch getEpoch(int epochNumber);
 
 private:
 

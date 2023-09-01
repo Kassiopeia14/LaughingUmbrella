@@ -11,7 +11,8 @@ UmbrellaPainter::UmbrellaPainter(WorldPresenter& _worldPresenter):
 	height(0),
 	worldLightBrush(CreateSolidBrush(RGB(8, 8, 8))),
 	pitBrush(CreateSolidBrush(RGB(8, 8, 128))),
-	appleBrush(CreateSolidBrush(RGB(8, 128, 8)))
+	appleBrush(CreateSolidBrush(RGB(8, 128, 8))),
+	agentBrush(CreateSolidBrush(RGB(128, 8, 8)))
 {
 
 }
@@ -54,6 +55,18 @@ void UmbrellaPainter::paint(HDC destinationDC)
 	BitBlt(destinationDC, 0, 0, width, height, dc, 0, 0, SRCCOPY);
 }
 
+void UmbrellaPainter::drawCell(HDC dc, int x, int y, HBRUSH brush)
+{
+	RECT r
+	{
+		.left = x * 80,
+		.top = y * 80,
+		.right = x * 80 + 80,
+		.bottom = y * 80 + 80
+	};
+	FillRect(dc, &r, brush);
+}
+
 void UmbrellaPainter::draw()
 {
 	int index = frontIndex.load() % 2;
@@ -61,6 +74,8 @@ void UmbrellaPainter::draw()
 
 	drawField(dc);
 	drawWorldInitialState(dc);
+
+	drawCurrentState(dc);
 
 	frontIndex.fetch_add(1);
 }
@@ -71,22 +86,11 @@ void UmbrellaPainter::drawField(HDC dc)
 
 	for (int i = 0; i < 10; i++)
 	{
-		int x = i * 80;
-
 		for (int j = 0; j < 10; j++)
 		{
-			int y = j * 80;
-
 			if ((i + j) % 2 == 0)
 			{
-				RECT r
-				{
-					.left = x,
-					.top = y,
-					.right = x + 80,
-					.bottom = y + 80
-				};
-				FillRect(dc, &r, worldLightBrush);
+				drawCell(dc, i, j, worldLightBrush);
 			}
 		}
 	}
@@ -98,30 +102,17 @@ void UmbrellaPainter::drawWorldInitialState(HDC dc)
 
 	for (auto cell = worldInitialState.pit.cells.begin(); cell != worldInitialState.pit.cells.end(); cell++)
 	{
-		int x = cell->x * 80,
-			y = cell->y * 80;
-
-		RECT r
-		{
-			.left = x,
-			.top = y,
-			.right = x + 80,
-			.bottom = y + 80
-		};
-		FillRect(dc, &r, pitBrush);
+		drawCell(dc, cell->x, cell->y, pitBrush);
 	}
 
 	Apple& apple(worldInitialState.apple);
 
-	int x = apple.x * 80,
-		y = apple.y * 80;
+	drawCell(dc, apple.x, apple.y, appleBrush);
+}
 
-	RECT r
-	{
-		.left = x,
-		.top = y,
-		.right = x + 80,
-		.bottom = y + 80
-	};
-	FillRect(dc, &r, appleBrush);
+void UmbrellaPainter::drawCurrentState(HDC dc)
+{
+	AgentState agentState = worldPresenter.getCurrentAgentState();
+
+	drawCell(dc, agentState.x, agentState.y, agentBrush);
 }

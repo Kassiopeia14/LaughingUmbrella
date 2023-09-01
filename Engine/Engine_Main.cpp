@@ -1,22 +1,14 @@
 #include <iostream>
 #include "../modHTTP/POST_HTTPRequest.h"
 #include "../modMessageBusClient/MessageBusClient.h"
+#include "../modMessageBusClient/Epoch.h"
+#include "Engine.h"
 
-void test()
-{
-	std::wstring url(L"/api/some");
-
-	std::string data("{ \"name\":\"John\", \"age\":23 }");
-
-	POST_HTTPRequest request;
-
-	std::string result = request.send(url, data);
-
-	std::cout << result << std::endl;
-}
 
 int main()
 {
+	Engine engine;
+
 	MessageBusClient MessageBusClient;
 
 	WorldInitialState worldInitialState
@@ -28,13 +20,29 @@ int main()
 		}
 	};
 
-	std::string postResult = MessageBusClient.sendWorldInitialState(worldInitialState);
+	std::string postWorldInitialStateResult = MessageBusClient.sendWorldInitialState(worldInitialState);
 
-	std::cout << "POST: " << postResult << std::endl;
+	std::cout << "POST: " << postWorldInitialStateResult << std::endl;
 
-	WorldInitialState getResult = MessageBusClient.getWorldInitialState();
+	//---------------------------------------
 
-	std::cout << "GET: apple " << getResult.apple.x << ", " << getResult.apple.y << std::endl;
+	Epoch epoch
+	{
+		.number = 0,
+		.agentStates = 
+		{ 
+			{.x = 3, .y = 2, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
+			{.x = 3, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
+			{.x = 4, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 4, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 5, .accumulatedReward = .0, .qFunction = engine.getQFunction() }
+		}
+	};
+
+	std::string postEpochResult = MessageBusClient.sendEpoch(epoch);
+
+	std::cout << "POST: " << postEpochResult << std::endl;
 
 	system("pause");
 }

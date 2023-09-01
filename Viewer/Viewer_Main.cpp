@@ -17,6 +17,8 @@ int APIENTRY WinMain(
 
     WorldPresenter worldPresenter;
 
+    worldPresenter.setEpoch(0);
+
     UmbrellaPainter painter(worldPresenter);
 
     Application application(instance);

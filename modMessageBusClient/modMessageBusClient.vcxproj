@@ -131,11 +131,14 @@
     <ClCompile Include="MessageBusClient.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AgentState.h" />
     <ClInclude Include="Apple.h" />
+    <ClInclude Include="Epoch.h" />
     <ClInclude Include="JSONConvert.h" />
     <ClInclude Include="MessageBusClient.h" />
     <ClInclude Include="Pit.h" />
     <ClInclude Include="PitCell.h" />
+    <ClInclude Include="QFunction.h" />
     <ClInclude Include="WorldInitialState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

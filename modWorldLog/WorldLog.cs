@@ -6,7 +6,12 @@ namespace modWorldLog
     {
         private WorldInitialState WorldInitialState;
 
-        private List<Epoch> Epochs;
+        Dictionary<int, Epoch> Epochs;
+
+        public WorldLog() 
+        {
+            Epochs = new Dictionary<int, Epoch>();
+        }
 
         public WorldInitialState getWorldInitialState()
         {
@@ -23,9 +28,9 @@ namespace modWorldLog
             return Epochs[epochNumber];
         }
 
-        public void setEpoch(Epoch _Epoch)
+        public void setEpoch(Epoch epoch)
         {
-            Epochs.Add(_Epoch);
+            Epochs.Add(epoch.Number, epoch);
         }
     }
 }
