@@ -11,6 +11,8 @@ class UmbrellaPainter
 {
 private:
 
+	static const int cellSize = 80;
+
 	WorldPresenter& worldPresenter;
 
 	RECT paintRect;
@@ -29,6 +31,8 @@ private:
 		agentBrush;
 
 	void drawCell(HDC dc, int x, int y, HBRUSH brush);
+
+	void drawCellQFunction(HDC dc, int x, int y, QTableCell qTableCell);
 
 	void drawField(HDC dc);
 

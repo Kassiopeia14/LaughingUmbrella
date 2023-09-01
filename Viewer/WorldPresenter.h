@@ -5,6 +5,7 @@
 #include "../modMessageBusClient/WorldInitialState.h"
 #include "../modMessageBusClient/MessageBusClient.h"
 #include "../modMessageBusClient/AgentState.h"
+#include "QTable.h"
 
 class WorldPresenter
 {
@@ -18,11 +19,17 @@ public:
 
 	AgentState getCurrentAgentState();
 
+	void setQFunction();
+
+	QTableCell getQFunction(int x, int y);
+
 private:
 
 	MessageBusClient messageBusClient;
 
 	WorldInitialState worldInitialState;
+
+	QTable qTable;
 
 	Epoch epoch;
 

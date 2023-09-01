@@ -41,10 +41,17 @@ void UmbrellaPainter::initialize(HWND windowHandle)
 	memoryDC[1] = CreateCompatibleDC(dc);
 	bitmap0 = CreateCompatibleBitmap(dc, width, height);
 	bitmap1 = CreateCompatibleBitmap(dc, width, height);
+
+	ReleaseDC(windowHandle, dc);
+
 	SelectObject(memoryDC[0], bitmap0);
 	SelectObject(memoryDC[1], bitmap1);
 
-	ReleaseDC(windowHandle, dc);
+	SetBkMode(memoryDC[0], TRANSPARENT);
+	SetBkMode(memoryDC[1], TRANSPARENT);
+
+	SetTextColor(memoryDC[0], RGB(200, 200, 200));
+	SetTextColor(memoryDC[1], RGB(200, 200, 200));
 }
 
 void UmbrellaPainter::paint(HDC destinationDC)
@@ -59,12 +66,47 @@ void UmbrellaPainter::drawCell(HDC dc, int x, int y, HBRUSH brush)
 {
 	RECT r
 	{
-		.left = x * 80,
-		.top = y * 80,
-		.right = x * 80 + 80,
-		.bottom = y * 80 + 80
+		.left = x * cellSize,
+		.top = y * cellSize,
+		.right = x * cellSize + cellSize,
+		.bottom = y * cellSize + cellSize
 	};
 	FillRect(dc, &r, brush);
+}
+
+std::wstring toString(double d)
+{
+	std::ostringstream stream;
+
+	stream << std::fixed;
+
+	stream << std::setprecision(4);
+
+	stream << d;
+
+	std::string string = stream.str();
+
+	return std::wstring(string.begin(), string.end());
+}
+
+void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableCell)
+{
+	std::wstring 
+		lQValue(L"L: " + toString(qTableCell.left)),
+		rQValue(L"R: " + toString(qTableCell.right)),
+		tQValue(L"T: " + toString(qTableCell.top)),
+		bQValue(L"B: " + toString(qTableCell.bottom));
+
+	int left = x * cellSize + 8,
+		top = y * cellSize + 4;
+
+	TextOut(dc, left, top, lQValue.c_str(), lQValue.length());
+	top += 14;
+	TextOut(dc, left, top, rQValue.c_str(), rQValue.length());
+	top += 14;
+	TextOut(dc, left, top, tQValue.c_str(), tQValue.length());
+	top += 14;
+	TextOut(dc, left, top, bQValue.c_str(), bQValue.length());
 }
 
 void UmbrellaPainter::draw()
@@ -76,6 +118,19 @@ void UmbrellaPainter::draw()
 	drawWorldInitialState(dc);
 
 	drawCurrentState(dc);
+
+	for (int x = 0; x < 10; x++)
+	{
+		for (int y = 0; y < 10; y++)
+		{
+			QTableCell qTableCell = worldPresenter.getQFunction(x, y);
+
+			if (qTableCell.calculated)
+			{
+				drawCellQFunction(dc, x, y, qTableCell);
+			}
+		}
+	}
 
 	frontIndex.fetch_add(1);
 }

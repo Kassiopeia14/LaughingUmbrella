@@ -3,6 +3,7 @@
 WorldPresenter::WorldPresenter():
 	messageBusClient(),
 	worldInitialState(messageBusClient.getWorldInitialState()),
+    qTable(),
     stateNumber(0),
 	begin(std::chrono::system_clock::now())
 {
@@ -20,6 +21,8 @@ WorldInitialState WorldPresenter::getWorldInitialState()
 void WorldPresenter::setEpoch(int number)
 {
     epoch = messageBusClient.getEpoch(number);
+
+    setQFunction();
 }
 
 AgentState WorldPresenter::getCurrentAgentState()
@@ -28,7 +31,7 @@ AgentState WorldPresenter::getCurrentAgentState()
 
     std::chrono::duration<double> duration = checkPoint - begin;
 
-    if (duration.count() > 1.0 / 5)
+    if (duration.count() > 1.0)
     {
         begin = checkPoint;
 
@@ -38,6 +41,8 @@ AgentState WorldPresenter::getCurrentAgentState()
         {
             stateNumber = 0;
         }
+
+        setQFunction();
     }
     else
     {
@@ -47,3 +52,14 @@ AgentState WorldPresenter::getCurrentAgentState()
 	return epoch.agentStates[stateNumber];
 }
 
+void WorldPresenter::setQFunction()
+{
+    AgentState agentState = epoch.agentStates[stateNumber];
+
+    qTable.setQFunction(agentState.x, agentState.y, agentState.qFunction);
+}
+
+QTableCell WorldPresenter::getQFunction(int x, int y)
+{
+    return qTable.getQFunction(x, y);
+}

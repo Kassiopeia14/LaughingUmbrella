@@ -21,6 +21,12 @@
     <ClInclude Include="WorldPresenter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QTableCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UmbrellaPainter.cpp">
@@ -30,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldPresenter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

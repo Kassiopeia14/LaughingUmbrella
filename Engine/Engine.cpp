@@ -12,9 +12,9 @@ QFunction Engine::getQFunction()
 {
 	return
 	{
-		.left = .0,
-		.right = .0,
-		.top = .0,
-		.bottom = .0
+		.left = (double)(rand() % 10000) / 1000,
+		.right = (double)(rand() % 10000) / 1000,
+		.top = (double)(rand() % 10000) / 1000,
+		.bottom = (double)(rand() % 10000) / 1000
 	};
 }
