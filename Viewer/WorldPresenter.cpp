@@ -72,3 +72,13 @@ QTableCell WorldPresenter::getQFunction(int x, int y)
 {
     return qTable.getQFunction(x, y);
 }
+
+int WorldPresenter::getEpochNumber()
+{
+    return epochNumber;
+}
+
+int WorldPresenter::getStepNumber()
+{
+    return stateNumber;
+}

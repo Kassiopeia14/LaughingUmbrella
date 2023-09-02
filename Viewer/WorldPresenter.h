@@ -23,6 +23,10 @@ public:
 
 	QTableCell getQFunction(int x, int y);
 
+	int getEpochNumber();
+
+	int getStepNumber();
+
 private:
 
 	MessageBusClient messageBusClient;
@@ -33,9 +37,9 @@ private:
 
 	Epoch epoch;
 
-	int epochNumber;
-
-	int stateNumber;
+	int 
+		epochNumber,
+		stateNumber;
 
 	std::chrono::time_point<std::chrono::system_clock> begin;
 

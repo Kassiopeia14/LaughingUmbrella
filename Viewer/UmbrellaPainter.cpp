@@ -130,6 +130,26 @@ void UmbrellaPainter::drawAccumulatedReward(HDC dc, int x, int y, double accumul
 void UmbrellaPainter::drawConsole(HDC dc)
 {
 	FillRect(dc, &consoleRect, consoleBrush);
+
+	AgentState agentState = worldPresenter.getCurrentAgentState();
+
+	std::wstring 
+		epochNumberValue(L"Epoch " + std::to_wstring(worldPresenter.getEpochNumber())),
+		stepNumberValue(L"Step " + std::to_wstring(worldPresenter.getStepNumber())),
+		accumulatedRewardValue(L"Accumulated Reward " + toString(agentState.accumulatedReward));
+
+	int left = consoleRect.left + 16,
+		top = consoleRect.top + 16;
+
+	SetTextColor(dc, RGB(51, 255, 255));
+
+	TextOut(dc, left, top, epochNumberValue.c_str(), epochNumberValue.length());
+
+	top += 14;
+	TextOut(dc, left, top, stepNumberValue.c_str(), stepNumberValue.length());
+
+	top += 14;
+	TextOut(dc, left, top, accumulatedRewardValue.c_str(), accumulatedRewardValue.length());
 }
 
 void UmbrellaPainter::draw()
