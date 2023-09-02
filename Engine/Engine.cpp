@@ -70,11 +70,11 @@ double Engine::getReward(int x, int y)
 {
 	if(positionIsApple(x, y))
 	{
-		return 10.;
+		return 10. - 1.;
 	}
 	else if (positionInPit(x, y))
 	{
-		return -100.;
+		return -100. - 1.;
 	}
 	else
 	{
@@ -139,6 +139,30 @@ QFunction Engine::calculateQFunction(int x, int y)
 	};
 }
 
+Engine::Direction Engine::getQFunctionDirection(QFunction qFunction)
+{
+	double max = qFunction.left;
+	Direction result = Direction::Left;
+
+	if (qFunction.right > max)
+	{
+		max = qFunction.right;
+		result = Direction::Right;
+	}
+	if (qFunction.top > max)
+	{
+		max = qFunction.top;
+		result = Direction::Top;
+	}
+	if (qFunction.bottom > max)
+	{
+		max = qFunction.bottom;
+		result = Direction::Bottom;
+	}
+
+	return result;
+}
+
 Epoch Engine::processEpoch()
 {
 	bool 
@@ -152,6 +176,12 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
+	int 
+		stepCount = 0,
+		successCount = 0;
+
+	double successRate = 0.;
+
 	while (!gameOver)
 	{
 		QFunction qFunction = calculateQFunction(x, y);
@@ -160,11 +190,53 @@ Epoch Engine::processEpoch()
 
 		agentStates.emplace_back(x, y, accumulatedReward, qFunction);
 
-		bool direction = rand() % 2;
+		double randomDecisionProbability = 1 - successRate;
 
-		int delta = (rand() % 2) * 2 - 1;
+		if (randomDecisionProbability > 0.5)
+		{
+			randomDecisionProbability = 0.5;
+		}
 
-		if (direction)
+		bool randomDecision = rand() % 10000 < randomDecisionProbability * 10000; //(rand() % 10 > 5);
+
+		bool horizontal;
+
+		int delta;
+
+		if (randomDecision)
+		{
+			horizontal = rand() % 2;
+
+			delta = (rand() % 2) * 2 - 1;
+		}
+		else
+		{
+			Direction direction = getQFunctionDirection(qFunction);
+
+			switch (direction)
+			{
+			case Engine::Left:
+				horizontal = true;
+				delta = -1;
+				break;
+			case Engine::Right:
+				horizontal = true;
+				delta = 1;
+				break;
+			case Engine::Top:
+				horizontal = false;
+				delta = -1;
+				break;
+			case Engine::Bottom:
+				horizontal = false;
+				delta = 1;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (horizontal)
 		{
 			x = add(x, delta);
 		}
@@ -180,6 +252,8 @@ Epoch Engine::processEpoch()
 			gameOver = true;
 			success = true;
 
+			successCount++;
+
 			accumulatedReward += 10.;
 		}
 		else if (positionInPit(x, y))
@@ -188,6 +262,10 @@ Epoch Engine::processEpoch()
 
 			accumulatedReward -= 100.;
 		}
+
+		stepCount++;
+
+		successRate = successCount / stepCount;
 	}
 
 	agentStates.emplace_back(x, y, accumulatedReward, QFunction{.left=0., .right=0., .top=0., .bottom=0.});

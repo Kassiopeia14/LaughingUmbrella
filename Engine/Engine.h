@@ -21,6 +21,14 @@ public:
 
 private:
 
+	enum Direction
+	{
+		Left,
+		Right,
+		Top,
+		Bottom
+	};
+
 	int startX, startY;
 
 	WorldInitialState worldInitialState;
@@ -40,4 +48,6 @@ private:
 	double getQFunctionMax(QFunction qFunction);
 
 	QFunction calculateQFunction(int x, int y);
+
+	Direction getQFunctionDirection(QFunction qFunction);
 };
