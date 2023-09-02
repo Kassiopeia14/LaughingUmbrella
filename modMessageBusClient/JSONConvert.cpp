@@ -71,11 +71,12 @@ void from_json(const nlohmann::json& j, AgentState& object)
 
 void to_json(nlohmann::json& j, const Epoch& object)
 {
-	j = nlohmann::json{ {"number", object.number}, {"agent_states", object.agentStates} };
+	j = nlohmann::json{ {"number", object.number}, {"agent_states", object.agentStates}, {"success", object.success} };
 }
 
 void from_json(const nlohmann::json& j, Epoch& object)
 {
 	j.at("number").get_to(object.number);
 	j.at("agent_states").get_to(object.agentStates);
+	j.at("success").get_to(object.success);
 }

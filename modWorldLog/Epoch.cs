@@ -14,5 +14,8 @@ namespace modWorldLog
 
         [JsonPropertyName("agent_states")]
         public List<AgentState> AgentStates { get; set; }
+
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
     }
 }

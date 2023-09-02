@@ -8,4 +8,6 @@ struct Epoch
 	int number;
 
 	std::vector<AgentState> agentStates;
+
+	bool success;
 };

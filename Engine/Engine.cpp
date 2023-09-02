@@ -82,7 +82,9 @@ bool Engine::positionIsApple(int x, int y)
 
 Epoch Engine::processEpoch()
 {
-	bool gameOver = false;
+	bool 
+		gameOver = false,
+		success = false;
 
 	int x = startX,
 		y = startY;
@@ -106,16 +108,22 @@ Epoch Engine::processEpoch()
 			y = add(y, delta);
 		}
 
-		if (positionInPit(x, y) || positionIsApple(x, y))
+		if (positionIsApple(x, y))
 		{
 			gameOver = true;
+			success = true;
+		}
+		else if (positionInPit(x, y))
+		{
+			gameOver = true;			
 		}
 	}
 
 	Epoch epoch
 	{
 		.number = epochNumber,
-		.agentStates = std::vector<AgentState>(agentStates.begin(), agentStates.end())
+		.agentStates = std::vector<AgentState>(agentStates.begin(), agentStates.end()),
+		.success = success
 	};
 
 	epochNumber++;

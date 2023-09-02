@@ -26,6 +26,10 @@ public:
 	int getEpochNumber();
 
 	int getStepNumber();
+	
+	int getSuccessCount();
+
+	double getSuccessRate();
 
 private:
 
@@ -39,7 +43,10 @@ private:
 
 	int 
 		epochNumber,
-		stateNumber;
+		stateNumber,
+		successCount;
+
+	double successRate;
 
 	std::chrono::time_point<std::chrono::system_clock> begin;
 

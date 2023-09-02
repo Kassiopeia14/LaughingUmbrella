@@ -78,13 +78,13 @@ void UmbrellaPainter::drawCell(HDC dc, int x, int y, HBRUSH brush)
 	FillRect(dc, &r, brush);
 }
 
-std::wstring toString(double d)
+std::wstring toString(double d, int precision)
 {
 	std::ostringstream stream;
 
 	stream << std::fixed;
 
-	stream << std::setprecision(4);
+	stream << std::setprecision(precision);
 
 	stream << d;
 
@@ -96,10 +96,10 @@ std::wstring toString(double d)
 void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableCell)
 {
 	std::wstring 
-		lQValue(L"L: " + toString(qTableCell.left)),
-		rQValue(L"R: " + toString(qTableCell.right)),
-		tQValue(L"T: " + toString(qTableCell.top)),
-		bQValue(L"B: " + toString(qTableCell.bottom));
+		lQValue(L"L: " + toString(qTableCell.left, 4)),
+		rQValue(L"R: " + toString(qTableCell.right, 4)),
+		tQValue(L"T: " + toString(qTableCell.top, 4)),
+		bQValue(L"B: " + toString(qTableCell.bottom, 4));
 
 	int left = x * cellSize + 8,
 		top = y * cellSize + 4;
@@ -117,7 +117,7 @@ void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableC
 
 void UmbrellaPainter::drawAccumulatedReward(HDC dc, int x, int y, double accumulatedReward)
 {
-	std::wstring accumulatedRewardValue(toString(accumulatedReward));
+	std::wstring accumulatedRewardValue(toString(accumulatedReward, 4));
 
 	int left = x * cellSize + 16,
 		top = y * cellSize + 6 + 4*14;
@@ -136,7 +136,8 @@ void UmbrellaPainter::drawConsole(HDC dc)
 	std::wstring 
 		epochNumberValue(L"Epoch " + std::to_wstring(worldPresenter.getEpochNumber())),
 		stepNumberValue(L"Step " + std::to_wstring(worldPresenter.getStepNumber())),
-		accumulatedRewardValue(L"Accumulated Reward " + toString(agentState.accumulatedReward));
+		successCountValue(L"Success " + std::to_wstring(worldPresenter.getSuccessCount()) + L" ( " + toString(worldPresenter.getSuccessRate(), 2) + L" )"),
+		accumulatedRewardValue(L"Accumulated Reward " + toString(agentState.accumulatedReward, 4));
 
 	int left = consoleRect.left + 16,
 		top = consoleRect.top + 16;
@@ -147,6 +148,9 @@ void UmbrellaPainter::drawConsole(HDC dc)
 
 	top += 14;
 	TextOut(dc, left, top, stepNumberValue.c_str(), stepNumberValue.length());
+
+	top += 14;
+	TextOut(dc, left, top, successCountValue.c_str(), successCountValue.length());
 
 	top += 14;
 	TextOut(dc, left, top, accumulatedRewardValue.c_str(), accumulatedRewardValue.length());

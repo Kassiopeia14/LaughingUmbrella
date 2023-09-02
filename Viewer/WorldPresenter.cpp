@@ -6,6 +6,8 @@ WorldPresenter::WorldPresenter():
     qTable(),
     epochNumber(0),
     stateNumber(0),
+    successCount(0),
+    successRate(0.),
 	begin(std::chrono::system_clock::now())
 {
     setEpoch();
@@ -41,9 +43,17 @@ AgentState WorldPresenter::getCurrentAgentState()
 
         if (stateNumber == epoch.agentStates.size())
         {
+            if (epoch.success)
+            {
+                successCount++;
+            }
+
             stateNumber = 0;
 
             epochNumber++;
+
+            successRate = (double)successCount / epochNumber;
+
             if (epochNumber == 1000)
             {
                 epochNumber = 0;
@@ -81,4 +91,14 @@ int WorldPresenter::getEpochNumber()
 int WorldPresenter::getStepNumber()
 {
     return stateNumber;
+}
+
+int WorldPresenter::getSuccessCount()
+{
+    return successCount;
+}
+
+double WorldPresenter::getSuccessRate()
+{
+    return successRate;
 }
