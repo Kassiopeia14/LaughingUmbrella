@@ -54,7 +54,7 @@ AgentState WorldPresenter::getCurrentAgentState()
 
             successRate = (double)successCount / epochNumber;
 
-            if (epochNumber == 1000)
+            if (epochNumber == 10000)
             {
                 epochNumber = 0;
             }

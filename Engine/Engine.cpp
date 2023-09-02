@@ -1,8 +1,8 @@
 #include "Engine.h"
 
 Engine::Engine():
-	startX(2),
-	startY(4),
+	startX(1),
+	startY(1),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
 	epochNumber(0)
@@ -34,10 +34,17 @@ WorldInitialState Engine::makeWorldInitialState()
 {
 	return WorldInitialState
 	{
-		.apple = {.x = 5, .y = 9},
+		.apple = {.x = 4, .y = 4},
 		.pit =
 		{
-			.cells = { {.x = 7, .y = 1}, {.x = 7, .y = 2}, {.x = 7, .y = 3} }
+			.cells =
+			{
+				{.x = 3, .y = 3}, {.x = 3, .y = 4}, {.x = 3, .y = 5}, {.x = 3, .y = 6}, {.x = 3, .y = 7}, {.x = 3, .y = 8},
+				{.x = 4, .y = 8}, {.x = 5, .y = 8}, {.x = 6, .y = 8}, {.x = 7, .y = 8}, {.x = 8, .y = 8},
+				{.x = 8, .y = 7}, {.x = 8, .y = 6}, {.x = 8, .y = 5}, {.x = 8, .y = 4}, {.x = 8, .y = 3},
+				{.x = 6, .y = 3}, {.x = 5, .y = 3}, {.x = 4, .y = 3},
+				{.x = 4, .y = 6}, {.x = 5, .y = 6}, {.x = 6, .y = 6}
+			}
 		},
 		.startX = startX,
 		.startY = startY
@@ -176,9 +183,7 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	int 
-		stepCount = 0,
-		successCount = 0;
+	int successCount = 0;
 
 	double successRate = 0.;
 
@@ -190,12 +195,7 @@ Epoch Engine::processEpoch()
 
 		agentStates.emplace_back(x, y, accumulatedReward, qFunction);
 
-		double randomDecisionProbability = 1 - successRate;
-
-		if (randomDecisionProbability > 0.5)
-		{
-			randomDecisionProbability = 0.5;
-		}
+		double randomDecisionProbability = 1. /(1. + sqrt((double)epochNumber));
 
 		bool randomDecision = rand() % 10000 < randomDecisionProbability * 10000; //(rand() % 10 > 5);
 
@@ -252,8 +252,6 @@ Epoch Engine::processEpoch()
 			gameOver = true;
 			success = true;
 
-			successCount++;
-
 			accumulatedReward += 10.;
 		}
 		else if (positionInPit(x, y))
@@ -263,9 +261,6 @@ Epoch Engine::processEpoch()
 			accumulatedReward -= 100.;
 		}
 
-		stepCount++;
-
-		successRate = successCount / stepCount;
 	}
 
 	agentStates.emplace_back(x, y, accumulatedReward, QFunction{.left=0., .right=0., .top=0., .bottom=0.});
@@ -278,6 +273,13 @@ Epoch Engine::processEpoch()
 	};
 
 	epochNumber++;
+
+	if (success)
+	{
+		successCount++;
+	}
+
+	successRate = successCount / epochNumber;
 
 	return epoch;
 }

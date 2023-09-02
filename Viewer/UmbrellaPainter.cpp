@@ -101,10 +101,10 @@ std::wstring toString(double d, int precision)
 void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableCell)
 {
 	std::wstring 
-		lQValue(L"L: " + toString(qTableCell.left, 4)),
-		rQValue(L"R: " + toString(qTableCell.right, 4)),
-		tQValue(L"T: " + toString(qTableCell.top, 4)),
-		bQValue(L"B: " + toString(qTableCell.bottom, 4));
+		lQValue(L"L: " + toString(qTableCell.left, 2)),
+		rQValue(L"R: " + toString(qTableCell.right, 2)),
+		tQValue(L"T: " + toString(qTableCell.top, 2)),
+		bQValue(L"B: " + toString(qTableCell.bottom, 2));
 
 	int left = x * cellSize + 8,
 		top = y * cellSize + 4;
