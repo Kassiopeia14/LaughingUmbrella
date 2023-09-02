@@ -24,29 +24,15 @@ int main()
 
 	std::cout << "POST: " << postWorldInitialStateResult << std::endl;
 
-	/*
-	Epoch epoch = {
-		.number = 0,
-		.agentStates = 
-		{ 
-			{.x = 3, .y = 2, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction()},
-			{.x = 3, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
-			{.x = 4, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 4, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 5, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() }
-		}
-	};
-
-	*/
-
 	//---------------------------------------
 
-	Epoch epoch = engine.processEpoch();
+	for (int i = 0; i < 1000; i++)
+	{
+		Epoch epoch = engine.processEpoch();
 
-	std::string postEpochResult = MessageBusClient.sendEpoch(epoch);
-
-	std::cout << "POST: " << postEpochResult << std::endl;
-
+		std::string postEpochResult = MessageBusClient.sendEpoch(epoch);
+		
+		std::cout << "POST: " << postEpochResult << std::endl;
+	}
 	system("pause");
 }

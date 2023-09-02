@@ -15,7 +15,7 @@ public:
 
 	WorldInitialState getWorldInitialState();
 
-	void setEpoch(int number);
+	void setEpoch();
 
 	AgentState getCurrentAgentState();
 
@@ -32,6 +32,8 @@ private:
 	QTable qTable;
 
 	Epoch epoch;
+
+	int epochNumber;
 
 	int stateNumber;
 

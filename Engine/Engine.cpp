@@ -1,7 +1,9 @@
 #include "Engine.h"
 
 Engine::Engine():
-	epochNumber(0)
+	epochNumber(0),
+	startX(5), 
+	startY(5)
 {
 }
 
@@ -46,8 +48,8 @@ Epoch Engine::processEpoch()
 {
 	const size_t stateCount = 1 + rand() % 32;
 
-	int x = rand() % 10, 
-		y = rand() % 10;
+	int x = startX,
+		y = startY;
 
 	std::vector<AgentState> agentStates(stateCount);
 

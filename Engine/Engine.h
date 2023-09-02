@@ -23,4 +23,5 @@ private:
 
 	int epochNumber;
 
+	int startX, startY;
 };

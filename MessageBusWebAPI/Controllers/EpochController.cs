@@ -27,7 +27,7 @@ namespace MessageBusWebAPI.Controllers
         {
             worldLog.setEpoch(epoch);
 
-            return "epoch set is ok";
+            return "epoch " + epoch.Number + " set";
         }
     }
 }
