@@ -35,7 +35,8 @@ private:
 
 	QGrid qGrid;
 
-	int epochNumber;
+	int epochNumber, qEpochCount, qSuccessCount;
+	double successRate;
 
 	WorldInitialState makeWorldInitialState();
 

@@ -2,10 +2,13 @@
 
 Engine::Engine():
 	startX(1),
-	startY(1),
+	startY(4),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
-	epochNumber(0)
+	epochNumber(0),
+	qEpochCount(0),
+	qSuccessCount(0),
+	successRate(0.)
 {
 }
 
@@ -43,7 +46,7 @@ WorldInitialState Engine::makeWorldInitialState()
 				{.x = 4, .y = 8}, {.x = 5, .y = 8}, {.x = 6, .y = 8}, {.x = 7, .y = 8}, {.x = 8, .y = 8},
 				{.x = 8, .y = 7}, {.x = 8, .y = 6}, {.x = 8, .y = 5}, {.x = 8, .y = 4}, {.x = 8, .y = 3},
 				{.x = 6, .y = 3}, {.x = 5, .y = 3}, {.x = 4, .y = 3},
-				{.x = 4, .y = 6}, {.x = 5, .y = 6}, {.x = 6, .y = 6}
+				{.x = 6, .y = 4}, {.x = 6, .y = 5}, {.x = 6, .y = 6}
 			}
 		},
 		.startX = startX,
@@ -172,7 +175,7 @@ Engine::Direction Engine::getQFunctionDirection(QFunction qFunction)
 
 Epoch Engine::processEpoch()
 {
-	bool 
+	bool
 		gameOver = false,
 		success = false;
 
@@ -183,24 +186,25 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	int successCount = 0;
+	double randomDecisionProbability = 1. - successRate;
 
-	double successRate = 0.;
+	bool 
+		randomDecisionPresent = false,
+		randomDecisionAllowed = rand() % 1000 < randomDecisionProbability * 1000;
 
 	while (!gameOver)
 	{
 		QFunction qFunction = calculateQFunction(x, y);
-
 		qGrid.setQFunction(x, y, qFunction);
-
 		agentStates.emplace_back(x, y, accumulatedReward, qFunction);
-
-		double randomDecisionProbability = 1. /(1. + sqrt((double)epochNumber));
-
-		bool randomDecision = rand() % 10000 < randomDecisionProbability * 10000; //(rand() % 10 > 5);
+		
+		bool randomDecision = false;
+		if (randomDecisionAllowed)
+		{
+			randomDecision = rand() % 1000 < randomDecisionProbability * 100;
+		}
 
 		bool horizontal;
-
 		int delta;
 
 		if (randomDecision)
@@ -208,6 +212,11 @@ Epoch Engine::processEpoch()
 			horizontal = rand() % 2;
 
 			delta = (rand() % 2) * 2 - 1;
+
+			if (!randomDecisionPresent)
+			{
+				randomDecisionPresent = true;
+			}
 		}
 		else
 		{
@@ -256,14 +265,13 @@ Epoch Engine::processEpoch()
 		}
 		else if (positionInPit(x, y))
 		{
-			gameOver = true;	
+			gameOver = true;
 
 			accumulatedReward -= 100.;
 		}
-
 	}
 
-	agentStates.emplace_back(x, y, accumulatedReward, QFunction{.left=0., .right=0., .top=0., .bottom=0.});
+	agentStates.emplace_back(x, y, accumulatedReward, QFunction{ .left = 0., .right = 0., .top = 0., .bottom = 0. });
 
 	Epoch epoch
 	{
@@ -274,12 +282,20 @@ Epoch Engine::processEpoch()
 
 	epochNumber++;
 
-	if (success)
+	if (!randomDecisionPresent)
 	{
-		successCount++;
+		qEpochCount++;
+
+		if (success)
+		{
+			qSuccessCount++;
+		}
 	}
 
-	successRate = successCount / epochNumber;
+	if (qSuccessCount > 0)
+	{
+		successRate = qSuccessCount / epochNumber;
+	}
 
 	return epoch;
 }
