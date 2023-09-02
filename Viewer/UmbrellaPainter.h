@@ -34,6 +34,8 @@ private:
 
 	void drawCellQFunction(HDC dc, int x, int y, QTableCell qTableCell);
 
+	void drawAccumulatedReward(HDC dc, int x, int y, double accumulatedReward);
+
 	void drawField(HDC dc);
 
 	void drawWorldInitialState(HDC dc);

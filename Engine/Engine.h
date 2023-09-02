@@ -12,5 +12,7 @@ public:
 	
 	QFunction getQFunction();
 
+	double getAccumulatedReward();
+
 private:
 };

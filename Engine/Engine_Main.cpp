@@ -31,12 +31,12 @@ int main()
 		.number = 0,
 		.agentStates = 
 		{ 
-			{.x = 3, .y = 2, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
-			{.x = 3, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
-			{.x = 4, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 3, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 4, .accumulatedReward = .0, .qFunction = engine.getQFunction() },
-			{.x = 5, .y = 5, .accumulatedReward = .0, .qFunction = engine.getQFunction() }
+			{.x = 3, .y = 2, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction()},
+			{.x = 3, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
+			{.x = 4, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 3, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 4, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() },
+			{.x = 5, .y = 5, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() }
 		}
 	};
 

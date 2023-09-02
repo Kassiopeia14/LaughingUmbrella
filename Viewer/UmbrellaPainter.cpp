@@ -49,9 +49,6 @@ void UmbrellaPainter::initialize(HWND windowHandle)
 
 	SetBkMode(memoryDC[0], TRANSPARENT);
 	SetBkMode(memoryDC[1], TRANSPARENT);
-
-	SetTextColor(memoryDC[0], RGB(200, 200, 200));
-	SetTextColor(memoryDC[1], RGB(200, 200, 200));
 }
 
 void UmbrellaPainter::paint(HDC destinationDC)
@@ -100,6 +97,8 @@ void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableC
 	int left = x * cellSize + 8,
 		top = y * cellSize + 4;
 
+	SetTextColor(dc, RGB(200, 200, 200));
+
 	TextOut(dc, left, top, lQValue.c_str(), lQValue.length());
 	top += 14;
 	TextOut(dc, left, top, rQValue.c_str(), rQValue.length());
@@ -107,6 +106,18 @@ void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableC
 	TextOut(dc, left, top, tQValue.c_str(), tQValue.length());
 	top += 14;
 	TextOut(dc, left, top, bQValue.c_str(), bQValue.length());
+}
+
+void UmbrellaPainter::drawAccumulatedReward(HDC dc, int x, int y, double accumulatedReward)
+{
+	std::wstring accumulatedRewardValue(toString(accumulatedReward));
+
+	int left = x * cellSize + 16,
+		top = y * cellSize + 6 + 4*14;
+
+	SetTextColor(dc, RGB(250, 200, 0));
+
+	TextOut(dc, left, top, accumulatedRewardValue.c_str(), accumulatedRewardValue.length());
 }
 
 void UmbrellaPainter::draw()
@@ -170,4 +181,6 @@ void UmbrellaPainter::drawCurrentState(HDC dc)
 	AgentState agentState = worldPresenter.getCurrentAgentState();
 
 	drawCell(dc, agentState.x, agentState.y, agentBrush);
+
+	drawAccumulatedReward(dc, agentState.x, agentState.y, agentState.accumulatedReward);
 }

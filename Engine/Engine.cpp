@@ -18,3 +18,8 @@ QFunction Engine::getQFunction()
 		.bottom = (double)(rand() % 10000) / 1000
 	};
 }
+
+double Engine::getAccumulatedReward()
+{
+	return (double)(rand() % 10000) / 1000;
+}
