@@ -4,6 +4,7 @@ Engine::Engine():
 	startX(2),
 	startY(4),
 	worldInitialState(makeWorldInitialState()),
+	qGrid(),
 	epochNumber(0)
 {
 }
@@ -48,18 +49,6 @@ WorldInitialState Engine::getWorldInitialState()
 	return worldInitialState;
 }
 
-
-QFunction Engine::getQFunction()
-{
-	return
-	{
-		.left = (double)(rand() % 10000) / 1000,
-		.right = (double)(rand() % 10000) / 1000,
-		.top = (double)(rand() % 10000) / 1000,
-		.bottom = (double)(rand() % 10000) / 1000
-	};
-}
-
 bool Engine::positionInPit(int x, int y)
 {
 	auto pitCell = worldInitialState.pit.cells.begin();
@@ -77,6 +66,79 @@ bool Engine::positionIsApple(int x, int y)
 	return (x == worldInitialState.apple.x && y == worldInitialState.apple.y);
 }
 
+double Engine::getReward(int x, int y)
+{
+	if(positionIsApple(x, y))
+	{
+		return 10.;
+	}
+	else if (positionInPit(x, y))
+	{
+		return -100.;
+	}
+	else
+	{
+		return -1.;
+	}
+}
+
+double Engine::getQFunctionMax(QFunction qFunction)
+{
+	double result = qFunction.left;
+
+	if (qFunction.right > result)
+	{
+		result = qFunction.right;
+	}
+	if (qFunction.top > result)
+	{
+		result = qFunction.top;
+	}
+	if (qFunction.bottom > result)
+	{
+		result = qFunction.bottom;
+	}
+
+	return result;
+}
+
+QFunction Engine::calculateQFunction(int x, int y)
+{
+	int leftX = add(x, -1),
+		leftY = y,
+		rightX = add(x, 1),
+		rightY = y,
+		topX = x,
+		topY = add(y, -1),
+		bottomX = x,
+		bottomY = add(y, 1);
+
+	QFunction
+		qFunction = qGrid.getQFunction(x, y),
+		leftQFunction = qGrid.getQFunction(leftX, leftY),
+		rightQFunction = qGrid.getQFunction(rightX, rightY),
+		topQFunction = qGrid.getQFunction(topX, topY),
+		bottomQFunction = qGrid.getQFunction(bottomX, bottomY);
+
+	double
+		leftEstimation = getReward(leftX, leftY) + getQFunctionMax(leftQFunction),
+		rightEstimation = getReward(rightX, rightY) + getQFunctionMax(rightQFunction),
+		topEstimation = getReward(topX, topY) + getQFunctionMax(topQFunction),
+		bottomEstimation = getReward(bottomX, bottomY) + getQFunctionMax(bottomQFunction),
+		leftDelta = leftEstimation - qFunction.left,
+		rightDelta = rightEstimation - qFunction.right,
+		topDelta = topEstimation - qFunction.top,
+		bottomDelta = bottomEstimation - qFunction.bottom;
+
+	return QFunction
+	{
+		.left = qFunction.left + 0.1 * leftDelta,
+		.right = qFunction.right + 0.1 * rightDelta,
+		.top = qFunction.top + 0.1 * topDelta,
+		.bottom = qFunction.bottom + 0.1 * bottomDelta
+	};
+}
+
 Epoch Engine::processEpoch()
 {
 	bool 
@@ -92,7 +154,11 @@ Epoch Engine::processEpoch()
 
 	while (!gameOver)
 	{
-		agentStates.emplace_back(x, y, accumulatedReward, getQFunction());
+		QFunction qFunction = calculateQFunction(x, y);
+
+		qGrid.setQFunction(x, y, qFunction);
+
+		agentStates.emplace_back(x, y, accumulatedReward, qFunction);
 
 		bool direction = rand() % 2;
 

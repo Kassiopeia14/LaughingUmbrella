@@ -49,16 +49,16 @@ WPARAM Application::run(std::function<void()> task)
 
             std::chrono::duration<double> duration = checkPoint - begin;
 
-            if (duration.count() > 1.0 / 5)
+            //if (duration.count() > 1.0 / 2)
             {
                 begin = checkPoint;
 
                 task();
             }
-            else
-            {
-                std::this_thread::sleep_for(std::chrono::microseconds(10));
-            }
+            //else
+            //{
+            //    std::this_thread::sleep_for(std::chrono::microseconds(10));
+            //}
         }
     }
 

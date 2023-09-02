@@ -3,9 +3,9 @@
 #include <random>
 #include <list>
 
-#include "../modMessageBusClient/QFunction.h"
 #include "../modMessageBusClient/Epoch.h"
 #include "../modMessageBusClient/WorldInitialState.h"
+#include "QGrid.h"
 
 class Engine
 {
@@ -17,8 +17,6 @@ public:
 
 	WorldInitialState getWorldInitialState();
 
-	QFunction getQFunction();
-
 	Epoch processEpoch();
 
 private:
@@ -27,6 +25,8 @@ private:
 
 	WorldInitialState worldInitialState;
 
+	QGrid qGrid;
+
 	int epochNumber;
 
 	WorldInitialState makeWorldInitialState();
@@ -34,4 +34,10 @@ private:
 	bool positionInPit(int x, int y);
 
 	bool positionIsApple(int x, int y);
+	
+	double getReward(int x, int y);
+
+	double getQFunctionMax(QFunction qFunction);
+
+	QFunction calculateQFunction(int x, int y);
 };
