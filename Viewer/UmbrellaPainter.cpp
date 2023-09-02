@@ -10,9 +10,10 @@ UmbrellaPainter::UmbrellaPainter(WorldPresenter& _worldPresenter):
 	frontIndex(0),
 	width(0), 
 	height(0),
-	worldLightBrush(CreateSolidBrush(RGB(8, 8, 8))),
+	worldLightBrush(CreateSolidBrush(RGB(16, 16, 16))),
 	pitBrush(CreateSolidBrush(RGB(8, 8, 128))),
 	appleBrush(CreateSolidBrush(RGB(8, 128, 8))),
+	startPositionBrush(CreateSolidBrush(RGB(25, 0, 50))),
 	agentBrush(CreateSolidBrush(RGB(128, 8, 8))),
 	consoleBrush(CreateSolidBrush(RGB(0, 0, 32)))
 {
@@ -117,9 +118,9 @@ void UmbrellaPainter::drawCellQFunction(HDC dc, int x, int y, QTableCell qTableC
 
 void UmbrellaPainter::drawAccumulatedReward(HDC dc, int x, int y, double accumulatedReward)
 {
-	std::wstring accumulatedRewardValue(toString(accumulatedReward, 4));
+	std::wstring accumulatedRewardValue(toString(accumulatedReward, 1));
 
-	int left = x * cellSize + 16,
+	int left = x * cellSize + 24,
 		top = y * cellSize + 6 + 4*14;
 
 	SetTextColor(dc, RGB(250, 200, 0));
@@ -137,7 +138,7 @@ void UmbrellaPainter::drawConsole(HDC dc)
 		epochNumberValue(L"Epoch " + std::to_wstring(worldPresenter.getEpochNumber())),
 		stepNumberValue(L"Step " + std::to_wstring(worldPresenter.getStepNumber())),
 		successCountValue(L"Success " + std::to_wstring(worldPresenter.getSuccessCount()) + L" ( " + toString(worldPresenter.getSuccessRate(), 2) + L" )"),
-		accumulatedRewardValue(L"Accumulated Reward " + toString(agentState.accumulatedReward, 4));
+		accumulatedRewardValue(L"Accumulated Reward " + toString(agentState.accumulatedReward, 1));
 
 	int left = consoleRect.left + 16,
 		top = consoleRect.top + 16;
@@ -186,13 +187,19 @@ void UmbrellaPainter::draw()
 
 void UmbrellaPainter::drawField(HDC dc)
 {
+	WorldInitialState worldInitialState = worldPresenter.getWorldInitialState();
+
 	FillRect(dc, &paintRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			if ((i + j) % 2 == 0)
+			if (i == worldInitialState.startX && j == worldInitialState.startY)
+			{
+				drawCell(dc, i, j, startPositionBrush);
+			}
+			else if ((i + j) % 2 == 0)
 			{
 				drawCell(dc, i, j, worldLightBrush);
 			}

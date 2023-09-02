@@ -30,6 +30,7 @@ private:
 		worldLightBrush,
 		pitBrush,
 		appleBrush,
+		startPositionBrush,
 		agentBrush,
 		consoleBrush;
 

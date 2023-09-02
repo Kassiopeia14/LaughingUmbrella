@@ -1,10 +1,10 @@
 #include "Engine.h"
 
 Engine::Engine():
+	startX(2),
+	startY(4),
 	worldInitialState(makeWorldInitialState()),
-	epochNumber(0),
-	startX(5), 
-	startY(5)
+	epochNumber(0)
 {
 }
 
@@ -37,7 +37,9 @@ WorldInitialState Engine::makeWorldInitialState()
 		.pit =
 		{
 			.cells = { {.x = 7, .y = 1}, {.x = 7, .y = 2}, {.x = 7, .y = 3} }
-		}
+		},
+		.startX = startX,
+		.startY = startY
 	};
 }
 
@@ -56,11 +58,6 @@ QFunction Engine::getQFunction()
 		.top = (double)(rand() % 10000) / 1000,
 		.bottom = (double)(rand() % 10000) / 1000
 	};
-}
-
-double Engine::getAccumulatedReward()
-{
-	return (double)(rand() % 10000) / 1000;
 }
 
 bool Engine::positionInPit(int x, int y)
@@ -89,11 +86,13 @@ Epoch Engine::processEpoch()
 	int x = startX,
 		y = startY;
 
+	double accumulatedReward = 0.;
+
 	std::list<AgentState> agentStates;
 
 	while (!gameOver)
 	{
-		agentStates.emplace_back(x, y, getAccumulatedReward(), getQFunction());
+		agentStates.emplace_back(x, y, accumulatedReward, getQFunction());
 
 		bool direction = rand() % 2;
 
@@ -108,14 +107,20 @@ Epoch Engine::processEpoch()
 			y = add(y, delta);
 		}
 
+		accumulatedReward -= 1.;
+
 		if (positionIsApple(x, y))
 		{
 			gameOver = true;
 			success = true;
+
+			accumulatedReward += 10.;
 		}
 		else if (positionInPit(x, y))
 		{
-			gameOver = true;			
+			gameOver = true;	
+
+			accumulatedReward -= 100.;
 		}
 	}
 

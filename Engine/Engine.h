@@ -19,17 +19,15 @@ public:
 
 	QFunction getQFunction();
 
-	double getAccumulatedReward();
-
 	Epoch processEpoch();
 
 private:
 
+	int startX, startY;
+
 	WorldInitialState worldInitialState;
 
 	int epochNumber;
-
-	int startX, startY;
 
 	WorldInitialState makeWorldInitialState();
 

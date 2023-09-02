@@ -8,4 +8,8 @@ struct WorldInitialState
     Apple apple;
 
     Pit pit;
+
+    int 
+        startX,
+        startY;
 };

@@ -34,13 +34,15 @@ void from_json(const nlohmann::json& j, Apple& object)
 
 void to_json(nlohmann::json& j, const WorldInitialState& object)
 {
-	j = nlohmann::json{ {"apple", object.apple}, {"pit", object.pit} };
+	j = nlohmann::json{ {"apple", object.apple}, {"pit", object.pit}, {"start_x", object.startX}, {"start_y", object.startY} };
 }
 
 void from_json(const nlohmann::json& j, WorldInitialState& object) 
 {
 	j.at("apple").get_to(object.apple);
 	j.at("pit").get_to(object.pit);
+	j.at("start_x").get_to(object.startX);
+	j.at("start_y").get_to(object.startY);
 }
 
 void to_json(nlohmann::json& j, const QFunction& object)

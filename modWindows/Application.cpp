@@ -49,7 +49,7 @@ WPARAM Application::run(std::function<void()> task)
 
             std::chrono::duration<double> duration = checkPoint - begin;
 
-            if (duration.count() > 1.0 / 60)
+            if (duration.count() > 1.0 / 5)
             {
                 begin = checkPoint;
 

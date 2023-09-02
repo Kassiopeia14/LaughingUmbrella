@@ -14,5 +14,11 @@ namespace modWorldLog
 
         [JsonPropertyName("pit")]
         public Pit Pit { get; set; }
+       
+        [JsonPropertyName("start_x")]
+        public int StartX { get; set; }
+
+        [JsonPropertyName("start_y")]
+        public int StartY { get; set; }
     }
 }
