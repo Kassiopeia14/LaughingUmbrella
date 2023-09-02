@@ -17,10 +17,16 @@ std::string GET_HTTPRequest::get(std::wstring url)
         WINHTTP_NO_PROXY_BYPASS, 0);
 
     if (!hSession) throw;
-    HINTERNET hConnect = WinHttpConnect(hSession, L"localhost", 7062, 0);
+    HINTERNET hConnect = WinHttpConnect(hSession, L"localhost", 8000, 0);
 
     if (!hConnect) throw;
     HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"GET", url.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+
+    DWORD option = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+        SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
+        SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+
+    WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &option, sizeof(DWORD));
 
     if (!hRequest) throw;
     BOOL bResults = WinHttpSendRequest(hRequest,

@@ -24,10 +24,8 @@ int main()
 
 	std::cout << "POST: " << postWorldInitialStateResult << std::endl;
 
-	//---------------------------------------
-
-	Epoch epoch
-	{
+	/*
+	Epoch epoch = {
 		.number = 0,
 		.agentStates = 
 		{ 
@@ -39,6 +37,12 @@ int main()
 			{.x = 5, .y = 5, .accumulatedReward = engine.getAccumulatedReward(), .qFunction = engine.getQFunction() }
 		}
 	};
+
+	*/
+
+	//---------------------------------------
+
+	Epoch epoch = engine.processEpoch();
 
 	std::string postEpochResult = MessageBusClient.sendEpoch(epoch);
 

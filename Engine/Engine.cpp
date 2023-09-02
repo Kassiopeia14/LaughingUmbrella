@@ -1,11 +1,29 @@
 #include "Engine.h"
 
-Engine::Engine()
+Engine::Engine():
+	epochNumber(0)
 {
 }
 
 Engine::~Engine()
 {
+}
+
+int Engine::add(int currentValue, int increment)
+{
+	int result = currentValue + increment;
+
+	if (result < 0)
+	{
+ 		result = 10 - (-result) % 10;
+	}
+
+	if (result > 10 - 1)
+	{
+		result = result % 10;
+	}
+
+	return result;
 }
 
 QFunction Engine::getQFunction()
@@ -23,3 +41,45 @@ double Engine::getAccumulatedReward()
 {
 	return (double)(rand() % 10000) / 1000;
 }
+
+Epoch Engine::processEpoch()
+{
+	const size_t stateCount = 1 + rand() % 32;
+
+	int x = rand() % 10, 
+		y = rand() % 10;
+
+	std::vector<AgentState> agentStates(stateCount);
+
+	for (auto stateItem = agentStates.begin(); stateItem != agentStates.end(); stateItem++)
+	{
+		stateItem->x = x;
+		stateItem->y = y;
+		stateItem->accumulatedReward = getAccumulatedReward();
+		stateItem->qFunction = getQFunction();
+
+		bool direction = rand() % 2;
+
+		int delta = (rand() % 2) * 2 - 1;
+
+		if (direction)
+		{
+			x = add(x, delta);
+		}
+		else
+		{
+			y = add(y, delta);
+		}
+	}
+
+	Epoch epoch
+	{
+		.number = epochNumber,
+		.agentStates = agentStates
+	};
+
+	epochNumber++;
+
+	return epoch;
+}
+

@@ -15,9 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestJSON", "TestJSON\TestJS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Viewer", "Viewer\Viewer.vcxproj", "{EC3A9193-F791-4B89-91B1-09E29A23576B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "modWorldLog", "modWorldLog\modWorldLog.csproj", "{7CE7BBD4-A08A-42DA-B006-E614968F1FCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "modWorldLog", "modWorldLog\modWorldLog.csproj", "{7CE7BBD4-A08A-42DA-B006-E614968F1FCC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "modMessageBusClient", "modMessageBusClient\modMessageBusClient.vcxproj", "{F6CE158E-0DDC-4086-9640-D63D65D21A64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "modSelfSignedIssuer", "modSelfSignedIssuer\modSelfSignedIssuer.csproj", "{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +127,18 @@ Global
 		{F6CE158E-0DDC-4086-9640-D63D65D21A64}.Release|x64.Build.0 = Release|x64
 		{F6CE158E-0DDC-4086-9640-D63D65D21A64}.Release|x86.ActiveCfg = Release|Win32
 		{F6CE158E-0DDC-4086-9640-D63D65D21A64}.Release|x86.Build.0 = Release|Win32
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|x64.Build.0 = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Debug|x86.Build.0 = Debug|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|x64.ActiveCfg = Release|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|x64.Build.0 = Release|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|x86.ActiveCfg = Release|Any CPU
+		{61591936-4EA1-4AC1-A420-4A3CEDF3B49F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
