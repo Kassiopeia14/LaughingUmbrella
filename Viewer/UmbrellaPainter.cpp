@@ -17,12 +17,16 @@ UmbrellaPainter::UmbrellaPainter(WorldPresenter& _worldPresenter):
 	agentBrush(CreateSolidBrush(RGB(128, 8, 8))),
 	consoleBrush(CreateSolidBrush(RGB(0, 0, 32)))
 {
-
 }
 
 UmbrellaPainter::~UmbrellaPainter()
 {
 	DeleteObject(worldLightBrush);
+	DeleteObject(pitBrush);
+	DeleteObject(appleBrush);
+	DeleteObject(startPositionBrush);
+	DeleteObject(agentBrush);
+	DeleteObject(consoleBrush);
 }
 
 void UmbrellaPainter::initialize(HWND windowHandle)
