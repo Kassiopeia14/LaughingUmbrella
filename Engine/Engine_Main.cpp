@@ -11,16 +11,7 @@ int main()
 
 	MessageBusClient MessageBusClient;
 
-	WorldInitialState worldInitialState
-	{
-		.apple = {.x = 5, .y = 9},
-		.pit =
-		{
-			.cells = { {.x = 7, .y = 1}, {.x = 7, .y = 2}, {.x = 7, .y = 3} }
-		}
-	};
-
-	std::string postWorldInitialStateResult = MessageBusClient.sendWorldInitialState(worldInitialState);
+	std::string postWorldInitialStateResult = MessageBusClient.sendWorldInitialState(engine.getWorldInitialState());
 
 	std::cout << "POST: " << postWorldInitialStateResult << std::endl;
 

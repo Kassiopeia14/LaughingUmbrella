@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 Engine::Engine():
+	worldInitialState(makeWorldInitialState()),
 	epochNumber(0),
 	startX(5), 
 	startY(5)
@@ -28,6 +29,24 @@ int Engine::add(int currentValue, int increment)
 	return result;
 }
 
+WorldInitialState Engine::makeWorldInitialState()
+{
+	return WorldInitialState
+	{
+		.apple = {.x = 5, .y = 9},
+		.pit =
+		{
+			.cells = { {.x = 7, .y = 1}, {.x = 7, .y = 2}, {.x = 7, .y = 3} }
+		}
+	};
+}
+
+WorldInitialState Engine::getWorldInitialState()
+{
+	return worldInitialState;
+}
+
+
 QFunction Engine::getQFunction()
 {
 	return
@@ -44,21 +63,35 @@ double Engine::getAccumulatedReward()
 	return (double)(rand() % 10000) / 1000;
 }
 
+bool Engine::positionInPit(int x, int y)
+{
+	auto pitCell = worldInitialState.pit.cells.begin();
+
+	while (pitCell != worldInitialState.pit.cells.end() && !(pitCell->x == x && pitCell->y == y))
+	{
+		pitCell++;
+	}
+
+	return (pitCell != worldInitialState.pit.cells.end());
+}
+
+bool Engine::positionIsApple(int x, int y)
+{
+	return (x == worldInitialState.apple.x && y == worldInitialState.apple.y);
+}
+
 Epoch Engine::processEpoch()
 {
-	const size_t stateCount = 1 + rand() % 32;
+	bool gameOver = false;
 
 	int x = startX,
 		y = startY;
 
-	std::vector<AgentState> agentStates(stateCount);
+	std::list<AgentState> agentStates;
 
-	for (auto stateItem = agentStates.begin(); stateItem != agentStates.end(); stateItem++)
+	while (!gameOver)
 	{
-		stateItem->x = x;
-		stateItem->y = y;
-		stateItem->accumulatedReward = getAccumulatedReward();
-		stateItem->qFunction = getQFunction();
+		agentStates.emplace_back(x, y, getAccumulatedReward(), getQFunction());
 
 		bool direction = rand() % 2;
 
@@ -72,12 +105,17 @@ Epoch Engine::processEpoch()
 		{
 			y = add(y, delta);
 		}
+
+		if (positionInPit(x, y) || positionIsApple(x, y))
+		{
+			gameOver = true;
+		}
 	}
 
 	Epoch epoch
 	{
 		.number = epochNumber,
-		.agentStates = agentStates
+		.agentStates = std::vector<AgentState>(agentStates.begin(), agentStates.end())
 	};
 
 	epochNumber++;
