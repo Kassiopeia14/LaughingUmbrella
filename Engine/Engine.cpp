@@ -124,6 +124,8 @@ Epoch Engine::processEpoch()
 		}
 	}
 
+	agentStates.emplace_back(x, y, accumulatedReward, QFunction{.left=0., .right=0., .top=0., .bottom=0.});
+
 	Epoch epoch
 	{
 		.number = epochNumber,

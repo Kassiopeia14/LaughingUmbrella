@@ -61,7 +61,10 @@ AgentState WorldPresenter::getCurrentAgentState()
             setEpoch();
         }
 
-        setQFunction();
+        if(stateNumber != epoch.agentStates.size() - 1)
+        {
+            setQFunction();
+        }
     }
     else
     {
