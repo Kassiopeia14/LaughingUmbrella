@@ -3,6 +3,7 @@
 UmbrellaPainter::UmbrellaPainter(WorldPresenter& _worldPresenter):
 	worldPresenter(_worldPresenter),
 	paintRect(),
+	consoleRect(),
 	memoryDC(),
 	bitmap0(0), 
 	bitmap1(0),
@@ -12,7 +13,8 @@ UmbrellaPainter::UmbrellaPainter(WorldPresenter& _worldPresenter):
 	worldLightBrush(CreateSolidBrush(RGB(8, 8, 8))),
 	pitBrush(CreateSolidBrush(RGB(8, 8, 128))),
 	appleBrush(CreateSolidBrush(RGB(8, 128, 8))),
-	agentBrush(CreateSolidBrush(RGB(128, 8, 8)))
+	agentBrush(CreateSolidBrush(RGB(128, 8, 8))),
+	consoleBrush(CreateSolidBrush(RGB(0, 0, 32)))
 {
 
 }
@@ -29,11 +31,6 @@ void UmbrellaPainter::initialize(HWND windowHandle)
 	RECT rect;
 	GetClientRect(windowHandle, &rect);
 
-	paintRect.left = rect.left;
-	paintRect.right = rect.right;
-	paintRect.top = rect.top;
-	paintRect.bottom = rect.bottom;
-
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 
@@ -49,6 +46,16 @@ void UmbrellaPainter::initialize(HWND windowHandle)
 
 	SetBkMode(memoryDC[0], TRANSPARENT);
 	SetBkMode(memoryDC[1], TRANSPARENT);
+	
+	paintRect.left = rect.left;
+	paintRect.right = rect.left + 80 * 10;
+	paintRect.top = rect.top;
+	paintRect.bottom = rect.top + 80 * 10;
+
+	consoleRect.left = paintRect.right;
+	consoleRect.right = width;
+	consoleRect.top = rect.top;
+	consoleRect.bottom = height;
 }
 
 void UmbrellaPainter::paint(HDC destinationDC)
@@ -120,12 +127,19 @@ void UmbrellaPainter::drawAccumulatedReward(HDC dc, int x, int y, double accumul
 	TextOut(dc, left, top, accumulatedRewardValue.c_str(), accumulatedRewardValue.length());
 }
 
+void UmbrellaPainter::drawConsole(HDC dc)
+{
+	FillRect(dc, &consoleRect, consoleBrush);
+}
+
 void UmbrellaPainter::draw()
 {
 	int index = frontIndex.load() % 2;
 	HDC dc = memoryDC[index];
 
 	drawField(dc);
+	drawConsole(dc);
+
 	drawWorldInitialState(dc);
 
 	drawCurrentState(dc);

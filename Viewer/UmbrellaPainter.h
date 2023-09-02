@@ -15,7 +15,9 @@ private:
 
 	WorldPresenter& worldPresenter;
 
-	RECT paintRect;
+	RECT 
+		paintRect,
+		consoleRect;
 
 	HDC memoryDC[2];
 	HBITMAP bitmap0, bitmap1;
@@ -28,7 +30,8 @@ private:
 		worldLightBrush,
 		pitBrush,
 		appleBrush,
-		agentBrush;
+		agentBrush,
+		consoleBrush;
 
 	void drawCell(HDC dc, int x, int y, HBRUSH brush);
 
@@ -41,6 +44,8 @@ private:
 	void drawWorldInitialState(HDC dc);
 
 	void drawCurrentState(HDC dc);
+
+	void drawConsole(HDC dc);
 
 public:
 

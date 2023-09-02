@@ -57,7 +57,7 @@ HWND MainWindow<Painter>::makeWindow(HINSTANCE applicationInstance)
     RECT rect{
         .left = 0,
         .top = 0,
-        .right = 800,
+        .right = 1200,
         .bottom = 800
     };
 
