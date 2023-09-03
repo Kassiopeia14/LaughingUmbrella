@@ -2,6 +2,7 @@
 
 #include <random>
 #include <list>
+#include <iostream>
 
 #include "../modMessageBusClient/Epoch.h"
 #include "../modMessageBusClient/WorldInitialState.h"
@@ -36,7 +37,7 @@ private:
 	QGrid qGrid;
 
 	int epochNumber, qEpochCount, qSuccessCount;
-	double successRate;
+	double successRate, randomQuota;
 
 	WorldInitialState makeWorldInitialState();
 
@@ -51,4 +52,6 @@ private:
 	QFunction calculateQFunction(int x, int y, Direction direction, int newX, int newY);
 
 	Direction getQFunctionDirection(QFunction qFunction);
+
+	double getMaxRelativeDiff(QFunction q1, QFunction q2);
 };

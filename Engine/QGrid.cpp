@@ -34,3 +34,30 @@ QFunction QGrid::getQFunction(int x, int y)
 
 	return qFunctionValues[index];
 }
+
+double QGrid::getNorm() const
+{
+	double result = 0.;
+
+	for (auto item = qFunctionValues.begin(); item != qFunctionValues.end(); item++)
+	{
+		if (abs(item->left) > result)
+		{
+			result = abs(item->left);
+		}
+		if (abs(item->right) > result)
+		{
+			result = abs(item->right);
+		}
+		if (abs(item->top) > result)
+		{
+			result = abs(item->top);
+		}
+		if (abs(item->bottom) > result)
+		{
+			result = abs(item->bottom);
+		}		
+	}
+
+	return result;
+}
