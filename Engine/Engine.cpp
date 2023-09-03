@@ -188,6 +188,11 @@ Epoch Engine::processEpoch()
 
 	double randomDecisionProbability = 1. - successRate;
 
+	if (randomDecisionProbability > 0.2)
+	{
+		randomDecisionProbability = 0.2;
+	}
+
 	bool 
 		randomDecisionPresent = false,
 		randomDecisionAllowed = rand() % 1000 < randomDecisionProbability * 1000;
@@ -201,7 +206,7 @@ Epoch Engine::processEpoch()
 		bool randomDecision = false;
 		if (randomDecisionAllowed)
 		{
-			randomDecision = rand() % 1000 < randomDecisionProbability * 100;
+			randomDecision =  rand() % 1000 < randomDecisionProbability * 1000;			
 		}
 
 		bool horizontal;
