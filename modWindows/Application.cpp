@@ -43,23 +43,22 @@ WPARAM Application::run(std::function<void()> task)
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        else
+                
+        std::chrono::time_point<std::chrono::system_clock> checkPoint = std::chrono::system_clock::now();
+
+        std::chrono::duration<double> duration = checkPoint - begin;
+
+        //if (duration.count() > 1.0 / 2)
         {
-            std::chrono::time_point<std::chrono::system_clock> checkPoint = std::chrono::system_clock::now();
+            begin = checkPoint;
 
-            std::chrono::duration<double> duration = checkPoint - begin;
-
-            //if (duration.count() > 1.0 / 2)
-            {
-                begin = checkPoint;
-
-                task();
-            }
-            //else
-            //{
-            //    std::this_thread::sleep_for(std::chrono::microseconds(10));
-            //}
+            task();
         }
+        //else
+        //{
+        //    std::this_thread::sleep_for(std::chrono::microseconds(10));
+        //}
+        
     }
 
     return msg.wParam;

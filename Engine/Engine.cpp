@@ -188,9 +188,9 @@ Epoch Engine::processEpoch()
 
 	double randomDecisionProbability = 1. - successRate;
 
-	if (randomDecisionProbability > 0.2)
+	if (randomDecisionProbability > 0.1)
 	{
-		randomDecisionProbability = 0.2;
+		randomDecisionProbability = 0.1;
 	}
 
 	bool 
