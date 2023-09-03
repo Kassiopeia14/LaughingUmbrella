@@ -112,33 +112,18 @@ double Engine::getQFunctionMax(QFunction qFunction)
 	return result;
 }
 
-QFunction Engine::calculateQFunction(int x, int y)
-{
-	int leftX = add(x, -1),
-		leftY = y,
-		rightX = add(x, 1),
-		rightY = y,
-		topX = x,
-		topY = add(y, -1),
-		bottomX = x,
-		bottomY = add(y, 1);
-
+QFunction Engine::calculateQFunction(int x, int y, Direction direction, int newX, int newY)
+{	
 	QFunction
 		qFunction = qGrid.getQFunction(x, y),
-		leftQFunction = qGrid.getQFunction(leftX, leftY),
-		rightQFunction = qGrid.getQFunction(rightX, rightY),
-		topQFunction = qGrid.getQFunction(topX, topY),
-		bottomQFunction = qGrid.getQFunction(bottomX, bottomY);
+		newPositionQFunction = qGrid.getQFunction(newX, newY);
 
 	double
-		leftEstimation = getReward(leftX, leftY) + getQFunctionMax(leftQFunction),
-		rightEstimation = getReward(rightX, rightY) + getQFunctionMax(rightQFunction),
-		topEstimation = getReward(topX, topY) + getQFunctionMax(topQFunction),
-		bottomEstimation = getReward(bottomX, bottomY) + getQFunctionMax(bottomQFunction),
-		leftDelta = leftEstimation - qFunction.left,
-		rightDelta = rightEstimation - qFunction.right,
-		topDelta = topEstimation - qFunction.top,
-		bottomDelta = bottomEstimation - qFunction.bottom;
+		newPositionEstimation = getReward(newX, newY) + getQFunctionMax(newPositionQFunction),
+		leftDelta = (direction == Direction::Left ? newPositionEstimation - qFunction.left : 0.),
+		rightDelta = (direction == Direction::Right ? newPositionEstimation - qFunction.right : 0.),
+		topDelta = (direction == Direction::Top ? newPositionEstimation - qFunction.top : 0.),
+		bottomDelta = (direction == Direction::Bottom ? newPositionEstimation - qFunction.bottom : 0.);
 
 	return QFunction
 	{
@@ -216,11 +201,15 @@ Epoch Engine::processEpoch()
 		bool horizontal;
 		int delta;
 
+		Direction direction;
+
 		if (randomDecision)
 		{
 			horizontal = rand() % 2;
 
 			delta = (rand() % 2) * 2 - 1;
+
+			direction = (horizontal ? (delta < 0 ? Engine::Left : Engine::Right) : (delta < 0 ? Engine::Top : Engine::Bottom));
 
 			if (!randomDecisionPresent)
 			{
@@ -229,7 +218,7 @@ Epoch Engine::processEpoch()
 		}
 		else
 		{
-			Direction direction = getQFunctionDirection(qFunction);
+			direction = getQFunctionDirection(qFunction);
 
 			switch (direction)
 			{
@@ -278,7 +267,7 @@ Epoch Engine::processEpoch()
 			accumulatedReward += 10.;
 		} 
 
-		QFunction newQFunction = calculateQFunction(xOld, yOld);
+		QFunction newQFunction = calculateQFunction(xOld, yOld, direction, x, y);
 		qGrid.setQFunction(xOld, yOld, newQFunction);
 		agentStates.emplace_back(xOld, yOld, accumulatedReward, newQFunction);
 	}

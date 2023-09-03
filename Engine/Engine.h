@@ -48,7 +48,7 @@ private:
 
 	double getQFunctionMax(QFunction qFunction);
 
-	QFunction calculateQFunction(int x, int y);
+	QFunction calculateQFunction(int x, int y, Direction direction, int newX, int newY);
 
 	Direction getQFunctionDirection(QFunction qFunction);
 };
