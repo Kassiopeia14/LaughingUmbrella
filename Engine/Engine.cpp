@@ -63,7 +63,7 @@ bool Engine::positionInPit(int x, int y)
 {
 	auto pitCell = worldInitialState.pit.cells.begin();
 
-	while (pitCell != worldInitialState.pit.cells.end() && !(pitCell->x == x && pitCell->y == y))
+	while ((pitCell != worldInitialState.pit.cells.end()) && !((pitCell->x == x) && (pitCell->y == y)))
 	{
 		pitCell++;
 	}
@@ -73,7 +73,7 @@ bool Engine::positionInPit(int x, int y)
 
 bool Engine::positionIsApple(int x, int y)
 {
-	return (x == worldInitialState.apple.x && y == worldInitialState.apple.y);
+	return ((x == worldInitialState.apple.x) && (y == worldInitialState.apple.y));
 }
 
 double Engine::getReward(int x, int y)
@@ -194,21 +194,23 @@ Epoch Engine::processEpoch()
 	{
 		randomDecisionProbability = 0.2;
 	}
-
+	
 	bool 
 		randomDecisionPresent = false,
 		randomDecisionAllowed = rand() % 1000 < randomDecisionProbability * 1000;
 
 	while (!gameOver)
 	{
-		QFunction qFunction = calculateQFunction(x, y);
-		qGrid.setQFunction(x, y, qFunction);
-		agentStates.emplace_back(x, y, accumulatedReward, qFunction);
-		
+		int
+			xOld = x,
+			yOld = y;
+
+		QFunction qFunction = qGrid.getQFunction(x, y);
+				
 		bool randomDecision = false;
 		if (randomDecisionAllowed)
 		{
-			randomDecision =  rand() % 1000 < randomDecisionProbability * 1000;
+			randomDecision = rand() % 1000 < randomDP * 1000;
 		}
 
 		bool horizontal;
@@ -263,19 +265,22 @@ Epoch Engine::processEpoch()
 
 		accumulatedReward -= 1.;
 
-		if (positionIsApple(x, y))
+		if (positionInPit(x, y))
+		{
+			gameOver = true;
+			accumulatedReward -= 100.;
+		}
+		else if (positionIsApple(x, y))
 		{
 			gameOver = true;
 			success = true;
 
 			accumulatedReward += 10.;
-		}
-		else if (positionInPit(x, y))
-		{
-			gameOver = true;
+		} 
 
-			accumulatedReward -= 100.;
-		}
+		QFunction newQFunction = calculateQFunction(xOld, yOld);
+		qGrid.setQFunction(xOld, yOld, newQFunction);
+		agentStates.emplace_back(xOld, yOld, accumulatedReward, newQFunction);
 	}
 
 	agentStates.emplace_back(x, y, accumulatedReward, QFunction{ .left = 0., .right = 0., .top = 0., .bottom = 0. });

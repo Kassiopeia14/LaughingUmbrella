@@ -44,16 +44,16 @@ WPARAM Application::run(std::function<void()> task)
             DispatchMessage(&msg);
         }
                 
-        std::chrono::time_point<std::chrono::system_clock> checkPoint = std::chrono::system_clock::now();
+        //std::chrono::time_point<std::chrono::system_clock> checkPoint = std::chrono::system_clock::now();
 
-        std::chrono::duration<double> duration = checkPoint - begin;
+        //std::chrono::duration<double> duration = checkPoint - begin;
 
         //if (duration.count() > 1.0 / 2)
-        {
-            begin = checkPoint;
+        //{
+        //    begin = checkPoint;
 
             task();
-        }
+        //}
         //else
         //{
         //    std::this_thread::sleep_for(std::chrono::microseconds(10));
