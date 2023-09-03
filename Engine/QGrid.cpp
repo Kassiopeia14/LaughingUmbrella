@@ -5,10 +5,10 @@ QGrid::QGrid():
 {
 	for (auto item = qFunctionValues.begin(); item != qFunctionValues.end(); item++)
 	{
-		item->left = .0;
-		item->right = .0;
-		item->top = .0;
-		item->bottom = .0;
+		item->left = 0.;
+		item->right = 0.;
+		item->top = 0.;
+		item->bottom = 0.;
 	}
 }
 
