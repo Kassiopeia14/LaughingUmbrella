@@ -186,11 +186,13 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	double randomDecisionProbability = 1. - successRate;
+	double 
+		randomDP = 1. - successRate,
+		randomDecisionProbability = randomDP;
 
-	if (randomDecisionProbability > 0.1)
+	if (randomDecisionProbability > 0.2)
 	{
-		randomDecisionProbability = 0.1;
+		randomDecisionProbability = 0.2;
 	}
 
 	bool 
@@ -206,7 +208,7 @@ Epoch Engine::processEpoch()
 		bool randomDecision = false;
 		if (randomDecisionAllowed)
 		{
-			randomDecision =  rand() % 1000 < randomDecisionProbability * 1000;			
+			randomDecision =  rand() % 1000 < randomDecisionProbability * 1000;
 		}
 
 		bool horizontal;
@@ -297,9 +299,9 @@ Epoch Engine::processEpoch()
 		}
 	}
 
-	if (qSuccessCount > 0)
+	if (qEpochCount > 0)
 	{
-		successRate = qSuccessCount / epochNumber;
+		successRate = qSuccessCount / qEpochCount;
 	}
 
 	return epoch;
