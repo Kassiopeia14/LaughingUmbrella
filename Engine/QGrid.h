@@ -12,8 +12,6 @@ public:
 
 	QFunction getQFunction(int x, int y);
 
-	double getNorm() const;
-
 private:
 
 	std::vector<QFunction> qFunctionValues;

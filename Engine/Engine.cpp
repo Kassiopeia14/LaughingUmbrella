@@ -5,11 +5,7 @@ Engine::Engine():
 	startY(4),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
-	epochNumber(0),
-	qEpochCount(0),
-	qSuccessCount(0),
-	successRate(0.),
-	randomQuota(1.0)
+	epochNumber(0)
 {
 }
 
@@ -135,31 +131,6 @@ QFunction Engine::calculateQFunction(int x, int y, Direction direction, int newX
 	};
 }
 
-double Engine::getMaxRelativeDiff(QFunction qFunction1, QFunction qFunction2)
-{
-	double result = abs(qFunction2.left) > 0. ? abs(qFunction2.left - qFunction1.left) / abs(qFunction2.left) : 1.;
-
-	double dTop = abs(qFunction2.top) > 0. ? abs(qFunction2.top - qFunction1.top) / abs(qFunction2.top) : 1.;
-	if (dTop > result)
-	{
-		result = dTop;
-	}
-
-	double dRight = abs(qFunction2.right) > 0. ? abs(qFunction2.right - qFunction1.right) / abs(qFunction2.right) : 1.;
-	if (dRight > result)
-	{
-		result = dRight;
-	}
-
-	double dBottom = abs(qFunction2.bottom) > 0. ? abs(qFunction2.bottom - qFunction1.bottom) / abs(qFunction2.bottom) : 1.;
-	if (dBottom > result)
-	{
-		result = dBottom;
-	}
-
-	return result;
-}
-
 Engine::Direction Engine::getQFunctionDirection(QFunction qFunction)
 {
 	double max = qFunction.left;
@@ -197,10 +168,7 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	std::cout << "RANDOM QUOTA " << randomQuota << std::endl;
-
-	double
-		randomDecisionProbability = randomQuota;
+	double	randomDecisionProbability = 0.1;
 
 	bool
 		randomDecisionPresent = false;
@@ -288,17 +256,6 @@ Epoch Engine::processEpoch()
 		qGrid.setQFunction(xOld, yOld, newQFunction);
 		agentStates.emplace_back(xOld, yOld, accumulatedReward, newQFunction);
 
-		if (randomDecisionPresent)
-		{
-			double mRelativeDiff = getMaxRelativeDiff(qFunction, newQFunction);
-
-			if (mRelativeDiff > 1.)
-			{
-				mRelativeDiff = 1.;
-			}
-			
-			randomQuota = mRelativeDiff;			
-		}
 	}
 
 	agentStates.emplace_back(x, y, accumulatedReward, QFunction{ .left = 0., .right = 0., .top = 0., .bottom = 0. });
@@ -311,23 +268,6 @@ Epoch Engine::processEpoch()
 	};
 
 	epochNumber++;
-
-	if (!randomDecisionPresent)
-	{
-		qEpochCount++;
-
-		if (success)
-		{
-			qSuccessCount++;
-		}
-	}
-
-	if (qEpochCount > 0)
-	{
-		successRate = (double)qSuccessCount / qEpochCount;
-
-		std::cout << "SUCCESS RATE " << successRate << std::endl;
-	}
 
 	return epoch;
 }
