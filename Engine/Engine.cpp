@@ -5,7 +5,8 @@ Engine::Engine():
 	startY(4),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
-	epochNumber(0)
+	epochNumber(0),
+	rd()
 {
 }
 
@@ -131,25 +132,47 @@ QFunction Engine::calculateQFunction(int x, int y, Direction direction, int newX
 	};
 }
 
+double qByIndex(QFunction qFunction, int index)
+{
+	switch (index)
+	{
+	case 0:
+		return qFunction.left;
+		break;
+	case 1:
+		return qFunction.right;
+		break;
+	case 2:
+		return qFunction.top;
+		break;
+	case 3:
+		return qFunction.bottom;
+		break;
+	default:
+		throw;
+	}
+}
+
 Engine::Direction Engine::getQFunctionDirection(QFunction qFunction)
 {
-	double max = qFunction.left;
-	Direction result = Direction::Left;
+	std::array<int, 4> indexes{ 0, 1, 2, 3 };
 
-	if (qFunction.right > max)
+	std::mt19937 gen{ rd()};
+
+	std::ranges::shuffle(indexes, gen);
+
+	double max = - std::numeric_limits<double>::infinity();
+
+	Direction result = (Direction)indexes[0];
+
+	for (int i = 0; i < 4; i++)
 	{
-		max = qFunction.right;
-		result = Direction::Right;
-	}
-	if (qFunction.top > max)
-	{
-		max = qFunction.top;
-		result = Direction::Top;
-	}
-	if (qFunction.bottom > max)
-	{
-		max = qFunction.bottom;
-		result = Direction::Bottom;
+		double value = qByIndex(qFunction, indexes[i]);
+		if (value > max)
+		{
+			max = value;
+			result = (Direction)indexes[i];
+		}
 	}
 
 	return result;

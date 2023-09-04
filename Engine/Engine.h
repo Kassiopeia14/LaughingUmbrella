@@ -3,6 +3,9 @@
 #include <random>
 #include <list>
 #include <iostream>
+#include <limits>
+#include <algorithm>
+#include<array>
 
 #include "../modMessageBusClient/Epoch.h"
 #include "../modMessageBusClient/WorldInitialState.h"
@@ -37,6 +40,8 @@ private:
 	QGrid qGrid;
 
 	int epochNumber;
+
+	std::random_device rd;
 
 	WorldInitialState makeWorldInitialState();
 
