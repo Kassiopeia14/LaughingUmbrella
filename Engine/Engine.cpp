@@ -40,7 +40,7 @@ WorldInitialState Engine::makeWorldInitialState()
 		.appleSet = 
 		{ .cells =
 			{
-				{.reward = 5., .x = 6, .y = 4},
+				{.reward = 5, .x = 6, .y = 4},
 				{.reward = 4., .x = 3, .y = 2}
 			}
 		},
