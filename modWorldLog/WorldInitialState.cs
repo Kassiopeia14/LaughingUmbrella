@@ -9,8 +9,8 @@ namespace modWorldLog
 {
     public class WorldInitialState
     {
-        [JsonPropertyName("apple")]
-        public Apple Apple { get; set; }
+        [JsonPropertyName("apple_set")]
+        public AppleSet AppleSet { get; set; }
 
         [JsonPropertyName("pit")]
         public Pit Pit { get; set; }

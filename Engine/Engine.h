@@ -14,6 +14,7 @@
 class Engine
 {
 public:
+
 	Engine();
 	~Engine();
 
@@ -33,6 +34,8 @@ private:
 		Bottom
 	};
 
+	double gradientRate;
+
 	int startX, startY;
 
 	WorldInitialState worldInitialState;
@@ -47,7 +50,7 @@ private:
 
 	bool positionInPit(int x, int y);
 
-	bool positionIsApple(int x, int y);
+	bool positionIsApple(int x, int y, double& reward);
 	
 	double getReward(int x, int y);
 

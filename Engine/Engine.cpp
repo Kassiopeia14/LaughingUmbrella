@@ -1,8 +1,9 @@
 #include "Engine.h"
 
 Engine::Engine():
+	gradientRate(1.),
 	startX(1),
-	startY(4),
+	startY(3),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
 	epochNumber(0),
@@ -35,16 +36,22 @@ WorldInitialState Engine::makeWorldInitialState()
 {
 	return WorldInitialState
 	{
-		.apple = {.x = 4, .y = 4},
+		.appleSet = 
+		{ .cells =
+			{
+				{.reward = 20., .x = 7, .y = 4},
+				{.reward = 10., .x = 6, .y = 4}
+			}
+		},
 		.pit =
 		{
 			.cells =
 			{
 				{.x = 3, .y = 3}, {.x = 3, .y = 4}, {.x = 3, .y = 5}, {.x = 3, .y = 6}, {.x = 3, .y = 7}, {.x = 3, .y = 8},
 				{.x = 4, .y = 8}, {.x = 5, .y = 8}, {.x = 6, .y = 8}, {.x = 7, .y = 8}, {.x = 8, .y = 8},
-				{.x = 8, .y = 7}, {.x = 8, .y = 6}, {.x = 8, .y = 5}, {.x = 8, .y = 4}, {.x = 8, .y = 3},
-				{.x = 6, .y = 3}, {.x = 5, .y = 3}, {.x = 4, .y = 3},
-				{.x = 6, .y = 4}, {.x = 6, .y = 5}, {.x = 6, .y = 6}
+				{.x = 8, .y = 6}, {.x = 8, .y = 5}, {.x = 8, .y = 4}, {.x = 8, .y = 3},
+				{.x = 6, .y = 3}, {.x = 5, .y = 3}, {.x = 4, .y = 3}, {.x = 7, .y = 3},
+				{.x = 7, .y = 6}, {.x = 5, .y = 6}, {.x = 6, .y = 6}
 			}
 		},
 		.startX = startX,
@@ -69,16 +76,31 @@ bool Engine::positionInPit(int x, int y)
 	return (pitCell != worldInitialState.pit.cells.end());
 }
 
-bool Engine::positionIsApple(int x, int y)
+bool Engine::positionIsApple(int x, int y, double& reward)
 {
-	return ((x == worldInitialState.apple.x) && (y == worldInitialState.apple.y));
+	auto appleCell = worldInitialState.appleSet.cells.begin();
+
+	while ((appleCell != worldInitialState.appleSet.cells.end()) && !((appleCell->x == x) && (appleCell->y == y)))
+	{
+		appleCell++;
+	}
+
+	if (appleCell != worldInitialState.appleSet.cells.end())
+	{
+		reward = appleCell->reward;
+		return true;
+	}
+
+	return false;
 }
 
 double Engine::getReward(int x, int y)
 {
-	if(positionIsApple(x, y))
+	double reward;
+
+	if(positionIsApple(x, y, reward))
 	{
-		return 10. - 1.;
+		return reward - 1.;
 	}
 	else if (positionInPit(x, y))
 	{
@@ -125,10 +147,10 @@ QFunction Engine::calculateQFunction(int x, int y, Direction direction, int newX
 
 	return QFunction
 	{
-		.left = qFunction.left + 0.1 * leftDelta,
-		.right = qFunction.right + 0.1 * rightDelta,
-		.top = qFunction.top + 0.1 * topDelta,
-		.bottom = qFunction.bottom + 0.1 * bottomDelta
+		.left = qFunction.left + gradientRate * leftDelta,
+		.right = qFunction.right + gradientRate * rightDelta,
+		.top = qFunction.top + gradientRate * topDelta,
+		.bottom = qFunction.bottom + gradientRate * bottomDelta
 	};
 }
 
@@ -191,7 +213,16 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	double	randomDecisionProbability = 0.1;
+	double randomDecisionProbability = .01;
+
+	double 
+		r = (double)(rand() % 10000) / 10000,
+		limit = 1. - 1. / sqrt(epochNumber);
+
+	if (r > limit)
+	{
+		randomDecisionProbability = 0.1;
+	}
 
 	while (!gameOver)
 	{
@@ -254,17 +285,19 @@ Epoch Engine::processEpoch()
 
 		accumulatedReward -= 1.;
 
+		double appleReward;
+
 		if (positionInPit(x, y))
 		{
 			gameOver = true;
 			accumulatedReward -= 100.;
 		}
-		else if (positionIsApple(x, y))
+		else if (positionIsApple(x, y, appleReward))
 		{
 			gameOver = true;
 			success = true;
 
-			accumulatedReward += 10.;
+			accumulatedReward += appleReward;
 		} 
 
 		QFunction newQFunction = calculateQFunction(xOld, yOld, direction, x, y);

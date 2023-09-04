@@ -12,9 +12,13 @@ void to_json(nlohmann::json& j, const Pit& object);
 
 void from_json(const nlohmann::json& j, Pit& object);
 
-void to_json(nlohmann::json& j, const Apple& object);
+void to_json(nlohmann::json& j, const AppleCell& object);
 
-void from_json(const nlohmann::json& j, Apple& object);
+void from_json(const nlohmann::json& j, AppleCell& object);
+
+void to_json(nlohmann::json& j, const AppleSet& object);
+
+void from_json(const nlohmann::json& j, AppleSet& object);
 
 void to_json(nlohmann::json& j, const WorldInitialState& object);
 

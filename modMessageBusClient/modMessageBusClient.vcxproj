@@ -134,7 +134,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AgentState.h" />
-    <ClInclude Include="Apple.h" />
+    <ClInclude Include="AppleSet.h" />
+    <ClInclude Include="AppleCell.h" />
     <ClInclude Include="Epoch.h" />
     <ClInclude Include="JSONConvert.h" />
     <ClInclude Include="MessageBusClient.h" />

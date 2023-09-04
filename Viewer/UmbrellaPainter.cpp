@@ -220,9 +220,10 @@ void UmbrellaPainter::drawWorldInitialState(HDC dc)
 		drawCell(dc, cell->x, cell->y, pitBrush);
 	}
 
-	Apple& apple(worldInitialState.apple);
-
-	drawCell(dc, apple.x, apple.y, appleBrush);
+	for (auto cell = worldInitialState.appleSet.cells.begin(); cell != worldInitialState.appleSet.cells.end(); cell++)
+	{
+		drawCell(dc, cell->x, cell->y, appleBrush);
+	}
 }
 
 void UmbrellaPainter::drawCurrentState(HDC dc)

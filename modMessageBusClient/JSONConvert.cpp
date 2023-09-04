@@ -21,25 +21,36 @@ void from_json(const nlohmann::json& j, Pit& object)
 	j.at("cells").get_to(object.cells);
 }
 
-void to_json(nlohmann::json& j, const Apple& object)
+void to_json(nlohmann::json& j, const AppleCell& object)
 {
-	j = nlohmann::json{ {"x", object.x}, {"y", object.y} };
+	j = nlohmann::json{ {"reward", object.reward}, {"x", object.x}, {"y", object.y} };
 }
 
-void from_json(const nlohmann::json& j, Apple& object) 
+void from_json(const nlohmann::json& j, AppleCell& object)
 {
+	j.at("reward").get_to(object.reward);
 	j.at("x").get_to(object.x);
 	j.at("y").get_to(object.y);
 }
 
+void to_json(nlohmann::json& j, const AppleSet& object)
+{
+	j = nlohmann::json{ {"cells", object.cells} };
+}
+
+void from_json(const nlohmann::json& j, AppleSet& object)
+{
+	j.at("cells").get_to(object.cells);
+}
+
 void to_json(nlohmann::json& j, const WorldInitialState& object)
 {
-	j = nlohmann::json{ {"apple", object.apple}, {"pit", object.pit}, {"start_x", object.startX}, {"start_y", object.startY} };
+	j = nlohmann::json{ {"apple_set", object.appleSet}, {"pit", object.pit}, {"start_x", object.startX}, {"start_y", object.startY} };
 }
 
 void from_json(const nlohmann::json& j, WorldInitialState& object) 
 {
-	j.at("apple").get_to(object.apple);
+	j.at("apple_set").get_to(object.appleSet);
 	j.at("pit").get_to(object.pit);
 	j.at("start_x").get_to(object.startX);
 	j.at("start_y").get_to(object.startY);

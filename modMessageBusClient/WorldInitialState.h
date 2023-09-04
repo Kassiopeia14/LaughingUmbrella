@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Apple.h"
+#include "AppleSet.h"
 #include "Pit.h"
 
 struct WorldInitialState
 {
-    Apple apple;
+    AppleSet appleSet;
 
     Pit pit;
 

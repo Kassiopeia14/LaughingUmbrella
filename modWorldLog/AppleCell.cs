@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace modWorldLog
 {
-    public class Apple
+    public class AppleCell
     {
+        [JsonPropertyName("reward")]
+        public double Reward { get; set; }
+
         [JsonPropertyName("x")]
         public int X { get; set; }
 

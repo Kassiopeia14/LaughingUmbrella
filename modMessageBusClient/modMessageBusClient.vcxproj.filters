@@ -29,7 +29,7 @@
     <ClInclude Include="WorldInitialState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Apple.h">
+    <ClInclude Include="AppleSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pit.h">
@@ -48,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Epoch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppleCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
