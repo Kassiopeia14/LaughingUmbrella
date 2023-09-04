@@ -170,9 +170,6 @@ Epoch Engine::processEpoch()
 
 	double	randomDecisionProbability = 0.1;
 
-	bool
-		randomDecisionPresent = false;
-
 	while (!gameOver)
 	{
 		int
@@ -195,11 +192,6 @@ Epoch Engine::processEpoch()
 			delta = (rand() % 2) * 2 - 1;
 
 			direction = (horizontal ? (delta < 0 ? Engine::Left : Engine::Right) : (delta < 0 ? Engine::Top : Engine::Bottom));
-
-			if (!randomDecisionPresent)
-			{
-				randomDecisionPresent = true;
-			}
 		}
 		else
 		{
