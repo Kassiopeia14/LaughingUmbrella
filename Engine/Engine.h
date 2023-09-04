@@ -46,6 +46,8 @@ private:
 
 	std::random_device rd;
 
+	bool goldenAppleReached;
+
 	WorldInitialState makeWorldInitialState();
 
 	bool positionInPit(int x, int y);

@@ -2,12 +2,13 @@
 
 Engine::Engine():
 	gradientRate(1.),
-	startX(1),
-	startY(3),
+	startX(8),
+	startY(8),
 	worldInitialState(makeWorldInitialState()),
 	qGrid(),
 	epochNumber(0),
-	rd()
+	rd(),
+	goldenAppleReached(false)
 {
 }
 
@@ -39,19 +40,19 @@ WorldInitialState Engine::makeWorldInitialState()
 		.appleSet = 
 		{ .cells =
 			{
-				{.reward = 20., .x = 7, .y = 4},
-				{.reward = 10., .x = 6, .y = 4}
+				{.reward = 5., .x = 6, .y = 4},
+				{.reward = 4., .x = 3, .y = 2}
 			}
 		},
 		.pit =
 		{
 			.cells =
-			{
+			{				
 				{.x = 3, .y = 3}, {.x = 3, .y = 4}, {.x = 3, .y = 5}, {.x = 3, .y = 6}, {.x = 3, .y = 7}, {.x = 3, .y = 8},
-				{.x = 4, .y = 8}, {.x = 5, .y = 8}, {.x = 6, .y = 8}, {.x = 7, .y = 8}, {.x = 8, .y = 8},
+				{.x = 4, .y = 8}, {.x = 5, .y = 8}, {.x = 6, .y = 8},
 				{.x = 8, .y = 6}, {.x = 8, .y = 5}, {.x = 8, .y = 4}, {.x = 8, .y = 3},
 				{.x = 6, .y = 3}, {.x = 5, .y = 3}, {.x = 4, .y = 3}, {.x = 7, .y = 3},
-				{.x = 7, .y = 6}, {.x = 5, .y = 6}, {.x = 6, .y = 6}
+				{.x = 7, .y = 6},  {.x = 6, .y = 6}
 			}
 		},
 		.startX = startX,
@@ -213,16 +214,7 @@ Epoch Engine::processEpoch()
 
 	std::list<AgentState> agentStates;
 
-	double randomDecisionProbability = .01;
-
-	double 
-		r = (double)(rand() % 10000) / 10000,
-		limit = 1. - 1. / sqrt(epochNumber);
-
-	if (r > limit)
-	{
-		randomDecisionProbability = 0.1;
-	}
+	double randomDecisionProbability = .1;
 
 	while (!gameOver)
 	{
@@ -298,6 +290,11 @@ Epoch Engine::processEpoch()
 			success = true;
 
 			accumulatedReward += appleReward;
+
+			if (appleReward == worldInitialState.appleSet.cells[0].reward)
+			{
+				goldenAppleReached = true;
+			}
 		} 
 
 		QFunction newQFunction = calculateQFunction(xOld, yOld, direction, x, y);
@@ -315,6 +312,11 @@ Epoch Engine::processEpoch()
 		.success = success
 	};
 
+	if (goldenAppleReached)
+	{
+		std::cout << goldenAppleReached << ", epoch" << epochNumber << std::endl;
+		goldenAppleReached = false;
+	}
 	epochNumber++;
 
 	return epoch;

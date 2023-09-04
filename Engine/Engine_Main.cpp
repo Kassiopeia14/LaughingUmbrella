@@ -13,7 +13,7 @@ int main()
 
 	std::string postWorldInitialStateResult = MessageBusClient.sendWorldInitialState(engine.getWorldInitialState());
 
-	std::cout << "POST: " << postWorldInitialStateResult << std::endl;
+	//std::cout << "POST: " << postWorldInitialStateResult << std::endl;
 
 	//---------------------------------------
 
@@ -23,7 +23,13 @@ int main()
 
 		std::string postEpochResult = MessageBusClient.sendEpoch(epoch);
 		
-		std::cout << "POST: " << postEpochResult << std::endl;
+		if (i % 1000 == 0)
+		{
+			std::cout << "1000" << std::endl;
+		}
 	}
+
+	std::cout << "THE END" << std::endl;
+
 	system("pause");
 }
